@@ -25,8 +25,35 @@ const App: Component = () => {
     isTyping: false as true
   };
 
+  const [fetchedNotes, setFetchedNotes] = createSignal([]);
   const [range, setRange]: Signal<Range> = createSignal();
-  const [notes, {mutate}] = createResource(range, fetchNotes);
+
+  const [notes, { mutate }] = createResource(range, async (range, { value }: {value: Array<NoteModel>}) => {
+    const newNotes = await fetchNotes(range);
+    value = value || [];
+
+    const filteredNewNotes = newNotes.filter(newNote =>
+      !value.some(existingNote => existingNote.id === newNote.id)
+    );
+
+    try {
+      return [...value, ...filteredNewNotes];
+    } finally {
+      setFetchedNotes(newNotes);
+    }
+  });
+
+  createMemo(() => {
+    let newNotes = [...untrack(notes) || []];
+
+    const ids = newNotes.map(note => note.id).filter(id => !fetchedNotes().some(fetchedNote => fetchedNote.id === id));
+
+    for (let id of ids) {
+      newNotes = newNotes.filter(item => item.id !== id);
+    }
+    mutate(newNotes.sort((a, b) => +a.id - +b.id));
+  });
+
   const [selectionRange, setSelectionRange] = createSignal(null);
   
   const xCookie: string = Cookies.get("x");
