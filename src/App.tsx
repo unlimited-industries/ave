@@ -2,6 +2,7 @@ import { createSignal, Component, createResource, Signal, For, Show, onMount, cr
 import { Workspace, Range, NoteModel } from './model';
 import { fetchNotes, updateNote, deleteNote, createFile, createNote, deleteFile } from './server';
 import { calculateRange, checkIfRangeForUpdate } from './range';
+import { getVideoDimensions } from './files';
 import Note from './Note';
 import Cookies from 'js-cookie';
 import axios from 'axios'; 
@@ -217,6 +218,48 @@ const App: Component = () => {
       mutate(newNotes);
       deletionQueue = new Set();
     }
+  });
+
+  document.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  })
+
+  document.addEventListener("drop", async (event) => {
+    event.preventDefault();
+
+    const files = event.dataTransfer.files;
+    let dtype: string;
+    let width: number;
+    let height: number;
+    if (files[0].type.startsWith("image")) {
+      dtype = "image";
+      const bmp = await createImageBitmap(files[0]);
+      ({ width, height } = bmp);
+    } else if (files[0].type.startsWith("video")) {
+      dtype = "video";
+      ({ width, height } = await getVideoDimensions(files[0]));
+    } else if (files[0].type.startsWith("audio")) {
+      dtype = "audio";
+    } else if (files[0].type.startsWith("application")) {
+      dtype = "file";
+    }
+    
+    let formData = new FormData();
+    formData.append('file', files[0]);
+    const data = await createFile(formData);
+    let note: NoteModel = {
+      id: undefined,
+      x: Math.round(workspace.mouseX / workspace.scale + workspace.x - width * 0.5),
+      y: Math.round(workspace.mouseY / workspace.scale + workspace.y - height * 0.5),
+      width: Math.round(width), 
+      height: Math.round(height),
+      body: "",
+      fileId: data["fileId"], 
+      dtype: dtype
+    };
+    let response = await createNote(note);
+    note.id = response.noteId;
+    mutate([...notes(), note]);
   });
 
   document.addEventListener("paste", async () => {
