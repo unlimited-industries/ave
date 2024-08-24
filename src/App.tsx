@@ -56,7 +56,7 @@ const App: Component = () => {
   });
 
   const [selectionRange, setSelectionRange] = createSignal(null);
-  
+
   const xCookie: string = Cookies.get("x");
   const yCookie: string = Cookies.get("y");
   const scaleCookie: string = Cookies.get("scale");
@@ -264,29 +264,29 @@ const App: Component = () => {
 
   document.addEventListener("paste", async () => {
     const data = await navigator.clipboard.read();
-      data.forEach(item => {
+    data.forEach(item => {
       item.types.forEach(async mimeType => {
-          if (mimeType.startsWith("image")) {
+        if (mimeType.startsWith("image")) {
           const blob = await item.getType(mimeType);
           const bmp = await createImageBitmap(blob);
           const { width, height } = bmp;
 
-              let formData = new FormData();
+          let formData = new FormData();
           formData.append('file', blob, "image.png"); 
 
           const data = await createFile(formData);
-                let note: NoteModel = {
-                  id: undefined,
+          let note: NoteModel = {
+            id: undefined,
             x: Math.round(workspace.mouseX / workspace.scale + workspace.x - width * 0.5),
             y: Math.round(workspace.mouseY / workspace.scale + workspace.y - height * 0.5),
             width: Math.round(width), 
             height: Math.round(height),
-                  body: "",
-                  fileId: data["fileId"], 
-                  dtype: "image"
+            body: "",
+            fileId: data["fileId"], 
+            dtype: "image"
           };
           let response = await createNote(note);
-                  note.id = response.noteId;
+          note.id = response.noteId;
           mutate([...notes(), note]);
         };
       });
