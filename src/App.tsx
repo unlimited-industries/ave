@@ -125,6 +125,8 @@ const App: Component = () => {
     workspaceDOM.addEventListener('wheel', (event: WheelEvent) => {
       const workspaceDOM = document.getElementById("workspace");
       event.preventDefault(); 
+      document.body.style.cursor = "default";
+
       if (event.ctrlKey) {
         let delta = Math.round(event.deltaY) * -0.01;
   
