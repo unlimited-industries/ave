@@ -1,4 +1,4 @@
-import { createSignal, Component, Accessor, Setter, createResource, Signal, For, Show, onMount} from 'solid-js';
+import { createSignal, Component, createResource, Signal, For, Show, onMount, createMemo, lazy, untrack} from 'solid-js';
 import { Workspace, Range, NoteModel } from './model';
 import { fetchNotes, updateNote, deleteNote, createFile, createNote, deleteFile } from './server';
 import { calculateRange, checkIfRangeForUpdate } from './range';
@@ -185,52 +185,39 @@ const App: Component = () => {
         newNotes = newNotes.filter(item => item.id !== id);
         deleteNote(id);
       }
-      mutate(newNotes)
+      mutate(newNotes);
       deletionQueue = new Set();
     }
   });
 
   document.addEventListener("paste", async () => {
-    navigator.clipboard.read().then(data => {
+    const data = await navigator.clipboard.read();
       data.forEach(item => {
-        item.types.forEach(mimeType => {
+      item.types.forEach(async mimeType => {
           if (mimeType.startsWith("image")) {
-            item.getType(mimeType).then(blob => {
-              const img = new Image();
-              const reader = new FileReader();
-
-              reader.onload = (e: ProgressEvent<FileReader>) => {
-                if (e.target) {
-                  img.src = e.target.result as string;
-                }
-              };
-
-              reader.readAsDataURL(blob);
+          const blob = await item.getType(mimeType);
+          const bmp = await createImageBitmap(blob);
+          const { width, height } = bmp;
 
               let formData = new FormData();
-              formData.append('file', blob, "image"); 
-              createFile(formData).then(data => { 
+          formData.append('file', blob, "image.png"); 
+
+          const data = await createFile(formData);
                 let note: NoteModel = {
                   id: undefined,
-                  x: Math.round(workspace.mouseX / workspace.scale + workspace.x - img.width * 0.5),
-                  y: Math.round(workspace.mouseY / workspace.scale + workspace.y - img.height * 0.5),
-                  width: Math.round(img.width), 
-                  height: Math.round(img.height),
+            x: Math.round(workspace.mouseX / workspace.scale + workspace.x - width * 0.5),
+            y: Math.round(workspace.mouseY / workspace.scale + workspace.y - height * 0.5),
+            width: Math.round(width), 
+            height: Math.round(height),
                   body: "",
                   fileId: data["fileId"], 
                   dtype: "image"
-                }
-                createNote(note).then(response => {
+          };
+          let response = await createNote(note);
                   note.id = response.noteId;
-                  mutate([...notes(), note])
-                });
-               });
-            });
-          }
-        })
+          mutate([...notes(), note]);
+        };
       });
-    }).catch(err => {
-      console.error('Failed to read from clipboard:', err);
     });
   });
 

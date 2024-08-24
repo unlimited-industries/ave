@@ -2,8 +2,8 @@ import { Accessor, Component } from 'solid-js';
 import { NoteView, NoteModel, Range } from "./model";
 
 interface ImageProps {
-	noteView: Accessor<NoteView>;
   selectionRange: Accessor<Range>;
+	noteView: Accessor<NoteView>;
 	note: NoteModel;
 }
 
