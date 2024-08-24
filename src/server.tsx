@@ -33,12 +33,11 @@ const convertToNoteModel = (note: Note): NoteModel => {
 } 
 
 const fetchNotes = async (range: Range) => {
-  let filter = "";
-  if (range != undefined) {
-    filter = `?x=${range.start[0]}:${range.end[0]}&y=${range.start[1]}:${range.end[1]}`;
-  }
-  return ((await axios.get<Array<Note>>("/notes" + filter)).data || []).map(note => convertToNoteModel(note));
-  };
+  const filter = range != undefined ? `?x=${range.start[0]}:${range.end[0]}&y=${range.start[1]}:${range.end[1]}`: "";
+  let notes = (await axios.get<Array<Note>>("/notes" + filter)).data || []
+
+  return notes.map(note => convertToNoteModel(note));
+};
   
 const createNote = async (note: NoteModel) => {
   const response = await axios.post("/notes", convertToNote(note));
