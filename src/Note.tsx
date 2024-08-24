@@ -4,6 +4,7 @@ import { Accessor, Switch, Match, Signal, createSignal } from 'solid-js';
 import Text from './Text'
 import BaseNote from "./BaseNote";
 import Image from './Image'
+import Video from './Video'
 import { proportionResize, resize } from "./resizing";
 
 interface NoteProps {
@@ -37,6 +38,11 @@ const Note: Component<NoteProps> = (props: NoteProps) => {
       <Match when={dtype == "image"}>
         <BaseNote {...props} noteView={noteView} setNoteView={setNoteView} resize={proportionResize}>
           <Image selectionRange={props.selectionRange} noteView={noteView} note={props.note}/>
+        </BaseNote>
+      </Match>
+      <Match when={dtype == "video"}>
+        <BaseNote {...props} noteView={noteView} setNoteView={setNoteView} resize={proportionResize}>
+          <Video selectionRange={props.selectionRange} noteView={noteView} note={props.note}/>
         </BaseNote>
       </Match>
     </Switch>
