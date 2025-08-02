@@ -6,17 +6,27 @@ const Text = (props) => {
   const [snapshot, send, actorRef] = useActor(textMachine);
   props.machine.send({ type: "ADD_MACHINE", machine: actorRef, snapshot: snapshot });
   let textarea;
+  let isActive = false;
 
   const handleMouseDown = () => {
     if (!snapshot.matches({ typing: 'typing' })) {
       textarea.blur();
+      isActive = false;
     }
   }
 
   const handleClick = () => {
     textarea.focus();
     textarea.setSelectionRange(textarea.selectionStart, textarea.selectionEnd);
+    isActive = true;
   }
+
+  document.addEventListener("visibilitychange", () => {
+    if (isActive) {
+      textarea.focus();
+      textarea.setSelectionRange(textarea.selectionStart, textarea.selectionEnd);
+    }
+  });
 
   const handleFocusOut= () => {
     textarea.blur();
@@ -25,6 +35,7 @@ const Text = (props) => {
 
   const handleMouseUp = () => {
     textarea.blur();
+    isActive = false;
   }
 
   return (
