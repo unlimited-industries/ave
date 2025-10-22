@@ -127,8 +127,8 @@ const WorkspaceWindow = (props) => {
           <div class="relative w-full h-full flex justify-center items-center overflow-clip">
             <Show when={imageSrc()} fallback={
               <>
-                <img src="src/assets/drag-drop.png" class="absolute"/>
-                <img src="src/assets/drag-drop-hover.png"
+                <img src="/assets/drag-drop.png" class="absolute"/>
+                <img src="/assets/drag-drop-hover.png"
                   class={`workspace-window-img absolute ${isDragging() ? "opacity-100": "opacity-0"}`}/>
               </>}>
               <img src={imageSrc()} class="aspect-auto"></img>
@@ -142,8 +142,8 @@ const WorkspaceWindow = (props) => {
               <Show when={props.action == 'update'}>
                 <button class='h-3/5' onClick={handleLink}>
                   <Show when={isLinked()} fallback={
-                    <img class='h-full' src='src/assets/unlinked.png'/>}>
-                    <img class='h-full' src='src/assets/linked.png'/>
+                    <img class='h-full' src='/assets/unlinked.png'/>}>
+                    <img class='h-full' src='/assets/linked.png'/>
                   </Show>
                 </button>
               </Show>

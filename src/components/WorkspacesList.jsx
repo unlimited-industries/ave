@@ -185,7 +185,7 @@ const WorkspaceList = (props) => {
                       setIsworksoaceWindowShown(true);
                     }
                   }>
-                    <img class="w-full h-full mix-blend-color-dodge" src='src/assets/edit.png'></img>
+                    <img class="w-full h-full mix-blend-color-dodge" src='/assets/edit.png'></img>
                   </div>
                 </div>
 
@@ -198,7 +198,7 @@ const WorkspaceList = (props) => {
           </For>
           <div class="add-workspace border border-[#414143] border-dashed rounded-md h-4/5 flex items-center justify-center">
             <button onClick={ () => (setWindowWorkspaceAction("create"), setIsworksoaceWindowShown(true)) } class="flex items-center justify-center w-full h-full">
-              <img src="src/assets/add-ws.svg" class="add-workspace-icon" alt="Add workspace"/>
+              <img src="/assets/add-ws.svg" class="add-workspace-icon" alt="Add workspace"/>
             </button>
           </div>
         </div>

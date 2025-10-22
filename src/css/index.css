@@ -40,6 +40,6 @@ code {
 }
 
 .add-workspace:hover .add-workspace-icon {
-  content: url("src/assets/add-ws-hover.svg");
+  content: url("/assets/add-ws-hover.svg");
 }
 

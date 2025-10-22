@@ -163,9 +163,9 @@ const Code = (props) => {
   return (
     <div class="grid grid-cols-12 grid-rows-12 h-full w-full"
       onMouseUp={handleMouseUp}>
-      <img src='src/assets/code-field.png' class='absolute -z-10 w-full h-full'/>
+      <img src='/assets/code-field.png' class='absolute -z-10 w-full h-full'/>
       <div class="col-start-2 row-start-2 col-span-10 grid grid-cols-12">
-        <img class="absolute -z-10 w-5/6" src='src/assets/tab.png'></img>
+        <img class="absolute -z-10 w-5/6" src='/assets/tab.png'></img>
         <div class='absolute flex z-10 h-[3%] left-[20.5%] top-[10%] w-[69%] items-start gap-3'>
           <For each={tabs}>{
             (tab) => (
@@ -228,18 +228,18 @@ const Code = (props) => {
             <Show when={tabs.find(tab => tab.id === activeTab())?.isCode} fallback={
               <>
                 <button class="w-6 h-6 bg-zinc-700 opacity-80 rounded-md hover:bg-opacity-75" onClick={copyToClipboard}>
-                  <img src='src/assets/copy.png' class='opacity-50'></img>
+                  <img src='/assets/copy.png' class='opacity-50'></img>
                 </button>
               </>
             }>
               <button class="w-6 h-6 bg-zinc-700 opacity-80 rounded-md hover:bg-opacity-75" onClick={switchIscode}>
-                  <img src='src/assets/code.png' class='opacity-50'></img>
+                  <img src='/assets/code.png' class='opacity-50'></img>
                 </button>
               <button class="w-6 h-6 bg-zinc-700 opacity-80 rounded-md hover:bg-opacity-75" onClick={copyToClipboard}>
-                <img src='src/assets/copy.png' class='opacity-50'></img>
+                <img src='/assets/copy.png' class='opacity-50'></img>
               </button>
               <button class="w-6 h-6 bg-zinc-700 opacity-80 rounder-md rounded-md hover:bg-opacity-75" onClick={runCode}>
-                  <img src='src/assets/run.png' class='opacity-50'></img>
+                  <img src='/assets/run.png' class='opacity-50'></img>
               </button>
             </Show>
           </div>
