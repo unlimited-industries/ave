@@ -33,7 +33,6 @@ export function parser(tokens) {
     const body = [];
     while (pos < tokens.length) {
       body.push(parseTopLevelComponent());
-      break;
     }
     return { type: 'Program', body };
   }
@@ -165,6 +164,10 @@ function parseDirective() {
     let RPN = shuntingYard(exprTokens);
     let expressionAST = { args: [], parent: undefined };
 
+      expressionAST.args.push({ type: 'UnaryPlus', args: [], parent: expressionAST });
+      root = expressionAST.args[0];
+      expressionAST = expressionAST.args[0];
+
     if (RPN[0]?.start !== 0 || RPN[0]?.end !== exprTokens.length - 1) {
       expressionAST.args.push({ type: 'Concatation', args: [], parent: expressionAST });
       root = expressionAST.args[0];
@@ -227,7 +230,7 @@ function parseDirective() {
             key = RPN[key]?.parent !== undefined ? RPN[key].parent : key;
           }
 
-          if (expressionAST.args.length === operators[expressionAST.symbol]?.args) {
+          while (expressionAST.args.length === operators[expressionAST.symbol]?.args) {
             expressionAST = expressionAST.parent;
           }
         }
@@ -236,7 +239,7 @@ function parseDirective() {
 
     concatanate(exprTokens.length - 1, 0);
 
-    return { type: 'Expression', value: expressionAST};
+    return { type: 'Expression', value: root};
   }
 
   function getNextIndent() {
