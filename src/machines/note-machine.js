@@ -5,7 +5,7 @@ import selectingMachine from './selecting-machine'
 import { checkIfInRange } from "../util/common";
 import { getBorderCollision, getBorderCursor } from "../util/border";
 import detectCollision from "../util/collisions";
-import { findFree, getGroup, getLink, splitGroups, tidyGroup } from "../util/groups";
+import { getGroup, getLink, splitGroups, tidyGroup } from "../util/groups";
 import { resizingStrategy } from "../util/resizing"
 
 const notesMachine = setup({
